@@ -1,0 +1,3 @@
+public enum ActionType {
+    DRAW_TWO, REVERSE, SKIP, WILD, WILD_DRAW_FOUR, SHUFFLE_HANDS;
+}
