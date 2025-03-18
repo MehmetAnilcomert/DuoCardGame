@@ -5,13 +5,11 @@ public class Player {
     private String name;
     private List<Card> hand;
     private int score;
-    private Random random;
     
     public Player(String name) {
         this.name = name;
         hand = new ArrayList<>();
         score = 0;
-        random = new Random();
     }
     
     public String getName() {
@@ -62,23 +60,42 @@ public class Player {
     
     public CardColor chooseColor() {
         Map<CardColor, Integer> colorCount = new HashMap<>();
-        for (CardColor color : CardColor.values()){
-            colorCount.put(color, 0);
+    
+        // Initialize count for non-WILD colors only
+        for (CardColor color : CardColor.values()) {
+            if (color != CardColor.WILD) {
+                colorCount.put(color, 0);
+            }
         }
+    
+        // Count non-WILD colors in the player's hand
         for (Card c : hand) {
-            if (c.getColor() != null) {
+            if (c.getColor() != null && c.getColor() != CardColor.WILD) {
                 colorCount.put(c.getColor(), colorCount.get(c.getColor()) + 1);
             }
         }
-        CardColor chosen = CardColor.BLUE;
+    
+        // Find the maximum count and collect colors with that count
+        List<CardColor> bestColors = new ArrayList<>();
         int max = -1;
-        for (Map.Entry<CardColor, Integer> entry : colorCount.entrySet()){
-            if (entry.getValue() > max){
+        for (Map.Entry<CardColor, Integer> entry : colorCount.entrySet()) {
+            if (entry.getValue() > max) {
                 max = entry.getValue();
-                chosen = entry.getKey();
+                bestColors.clear();  // Clear previous choices
+                bestColors.add(entry.getKey());
+            } else if (entry.getValue() == max) {
+                bestColors.add(entry.getKey());  // Add to list if same count
             }
         }
-        return chosen;
+    
+        // If no color has been chosen (only WILD cards in hand), pick a random non-WILD color
+        if (bestColors.isEmpty()) {
+            bestColors.addAll(colorCount.keySet()); // All non-WILD colors are valid choices
+        }
+    
+        // Randomly select one of the best colors
+        Random rand = new Random();
+        return bestColors.get(rand.nextInt(bestColors.size()));
     }
     
     public Card playCard(Card card) {

@@ -14,13 +14,13 @@ public class NumberCard extends Card {
     }
 
     @Override
-    public void executeAction(IGameMediator mediator) {
-        mediator.nextTurn();
+    public String toString() {
+        return getColor() + " " + number;
     }
 
     @Override
-    public String toString() {
-        return getColor() + " " + number;
+    public void executeEffect(IGameMediator mediator) {
+        mediator.moveToNextPlayer();
     }
 
     @Override

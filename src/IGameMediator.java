@@ -5,5 +5,4 @@ public interface IGameMediator {
     Deck getDeck();
     Player selectDealer();
     void endRound();
-    void nextTurn();
 }

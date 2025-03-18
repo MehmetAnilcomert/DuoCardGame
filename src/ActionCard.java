@@ -35,6 +35,7 @@ public class ActionCard extends Card {
                (topCard instanceof ActionCard && ((ActionCard)topCard).getActionType() == this.actionType);
     }
     
+    @Override
     public void executeEffect(IGameMediator mediator) {
         System.out.println("Executing effect of " + actionType);
         switch(actionType) {
@@ -49,10 +50,11 @@ public class ActionCard extends Card {
                 mediator.moveToNextPlayer();
                 break;
             case REVERSE:
-                if(mediator instanceof DuoCardGame) {
+                if (mediator instanceof DuoCardGame) {
                     ((DuoCardGame)mediator).reverseDirection();
                     System.out.println("Game direction reversed.");
                 }
+                mediator.moveToNextPlayer();
                 break;
             case SKIP:
                 mediator.moveToNextPlayer();
@@ -66,6 +68,8 @@ public class ActionCard extends Card {
                     ((DuoCardGame)mediator).setCurrentColor(chosenColor);
                 }
                 System.out.println(current.getName() + " chooses color " + chosenColor);
+                color = chosenColor;
+                mediator.moveToNextPlayer();
                 break;
             case WILD_DRAW_FOUR:
                 Player curr = mediator.getCurrentPlayer();
@@ -73,6 +77,7 @@ public class ActionCard extends Card {
                 if(mediator instanceof DuoCardGame) {
                     ((DuoCardGame)mediator).setCurrentColor(newColor);
                 }
+                color = newColor;
                 mediator.moveToNextPlayer();
                 Player affected = mediator.getCurrentPlayer();
                 for(int i = 0; i < 4; i++){
@@ -90,7 +95,9 @@ public class ActionCard extends Card {
                     CardColor chosen = p.chooseColor();
                     ((DuoCardGame)mediator).setCurrentColor(chosen);
                     System.out.println(p.getName() + " chooses color " + chosen);
+                    color = chosen;
                 }
+                mediator.moveToNextPlayer();
                 break;
             default:
                 break;

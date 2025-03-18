@@ -1,87 +1,89 @@
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class Deck {
-
-    private final List<Card> cards;
-
+    private List<Card> drawPile;
+    private List<Card> discardPile;
+    private List<Card> shufflePile;
+    
     public Deck() {
-        cards = new ArrayList<>();
+        drawPile = new ArrayList<>();
+        discardPile = new ArrayList<>();
+        shufflePile = new ArrayList<>();
         initializeDeck();
+        shuffle();
     }
-
-    private void initializeDeck() {
-        // Add number cards (0-9) for each color
-        for (CardColor color : new CardColor[]{CardColor.RED, CardColor.BLUE, CardColor.GREEN, CardColor.YELLOW}) {
-            // One zero card per color
-            cards.add(new NumberCard(color, 0));
-            // Two of each number 1-9 per color
-            for (int i = 1; i <= 9; i++) {
-                cards.add(new NumberCard(color, i));
-                cards.add(new NumberCard(color, i));
-            }
-
-            // Add action cards
-            // Two of each per color: Skip, Reverse, Draw Two
-            for (int i = 0; i < 2; i++) {
-                cards.add(new ActionCard(color, ActionType.SKIP));
-                cards.add(new ActionCard(color, ActionType.REVERSE));
-                cards.add(new ActionCard(color, ActionType.DRAW_TWO));
+    
+    public void initializeDeck() {
+        // Number Cards: 1 adet 0 ve 2 adet 1-9 her renkten.
+        for (CardColor color : CardColor.values()) {
+            if (color != CardColor.WILD) {
+                drawPile.add(new NumberCard(color, 0));
+                for (int num = 1; num <= 9; num++) {
+                    drawPile.add(new NumberCard(color, num));
+                    drawPile.add(new NumberCard(color, num));
+                }
             }
         }
-
-        // Add Wild cards (4 each)
+        // Action Cards: DRAW_TWO, REVERSE, SKIP (her renkten 2 adet)
+        for (CardColor color : CardColor.values()) {
+            if (color != CardColor.WILD) {
+                drawPile.add(new ActionCard(color, ActionType.DRAW_TWO));
+                drawPile.add(new ActionCard(color, ActionType.DRAW_TWO));
+                drawPile.add(new ActionCard(color, ActionType.REVERSE));
+                drawPile.add(new ActionCard(color, ActionType.REVERSE));
+                drawPile.add(new ActionCard(color, ActionType.SKIP));
+                drawPile.add(new ActionCard(color, ActionType.SKIP));
+            }   
+        }
+        // Wild ve Wild Draw Four: Her biri 4 adet
         for (int i = 0; i < 4; i++) {
-            cards.add(new ActionCard(CardColor.WILD, ActionType.WILD));
-            cards.add(new ActionCard(CardColor.WILD, ActionType.WILD_DRAW_FOUR));
+            drawPile.add(new ActionCard(CardColor.WILD, ActionType.WILD));
+            drawPile.add(new ActionCard(CardColor.WILD, ActionType.WILD_DRAW_FOUR));
         }
+        // Shuffle Hands: 1 adet
+        drawPile.add(new ActionCard(CardColor.WILD, ActionType.SHUFFLE_HANDS));
     }
-
+    
     public void shuffle() {
-        Collections.shuffle(cards);
+        Collections.shuffle(drawPile);
     }
-
-    public Card drawCard() {
-        if (cards.isEmpty()) {
-            throw new IllegalStateException("Deck is empty");
-        }
-        return cards.remove(cards.size() - 1);
-    }
-
-    public boolean isEmpty() {
-        return cards.isEmpty();
-    }
-
-    public int size() {
-        return cards.size();
-    }
-
-    public void addCard(Card card) {
-        cards.add(card);
-    }
-
-    // Kartları oyunculara dağıtan metot
+    
     public void dealCards(List<Player> players, int count) {
         for (int i = 0; i < count; i++) {
             for (Player p : players) {
-                if (drawPile.isEmpty()) {
-                    reshuffle();
-                }
+                if (drawPile.isEmpty()) reshuffle();
                 p.addCard(drawCard());
             }
         }
     }
-
-    // Bir kartı Discard Pile'a ekleyen metot
+    
+    public Card drawCard() {
+        if (drawPile.isEmpty()) {
+            reshuffle();
+        }
+        return drawPile.remove(0);
+    }
+    
+    public Card getTopDiscardPileCard() {
+        if (discardPile.isEmpty()) return null;
+        return discardPile.get(discardPile.size() - 1);
+    }
+    
     public void putCardToDiscardPile(Card card) {
         discardPile.add(card);
     }
-
-    // Bir kartı Draw Pile'a ekleyen metot (örneğin dealer seçiminde kullanılıyor)
+    
+    public void reshuffle() {
+        if (discardPile.size() > 1) {
+            Card top = discardPile.remove(discardPile.size() - 1);
+            drawPile.addAll(discardPile);
+            discardPile.clear();
+            discardPile.add(top);
+            shuffle();
+        }
+    }
+    
     public void addCardToDrawPile(Card card) {
         drawPile.add(card);
     }
-
 }

@@ -16,8 +16,8 @@ public abstract class Card {
     }
     
     public abstract boolean isPlayable(Card topCard);
-    
-    public abstract void executeAction(IGameMediator mediator);
+
+    public abstract void executeEffect(IGameMediator mediator);
     
     @Override
     public abstract String toString();
