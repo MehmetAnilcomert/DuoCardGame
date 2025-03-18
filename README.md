@@ -1,0 +1,13 @@
+# G05_CENG431_HW1
+
+This project implements the Duo Card Game for the CENG431 Homework 1 assignment.
+
+## Project Structure
+- **src/main/java/com/duocardgame/**: Contains all Java source files.
+- **Files/**: Folder for CSV log files.
+- **.vscode/**: VSCode settings (e.g., UTF8 encoding).
+
+## How to Run
+1. Open the project folder in VSCode.
+2. Ensure you have a proper Java JDK installed and configured.
+3. Run the `DuoCardGameMain.java` file.
