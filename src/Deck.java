@@ -1,18 +1,22 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Deck {
     private List<Card> drawPile;
     private List<Card> discardPile;
-    private List<Card> shufflePile;
     
     public Deck() {
         drawPile = new ArrayList<>();
         discardPile = new ArrayList<>();
-        shufflePile = new ArrayList<>();
         initializeDeck();
         shuffle();
     }
-    
+
+    public Deck(Deck deck) {
+        this.drawPile = deck.drawPile.stream().map(c -> c.copy()).collect(Collectors.toList());
+        this.discardPile = deck.discardPile.stream().map(c -> c.copy()).collect(Collectors.toList());
+    }
+
     public void initializeDeck() {
         // Number Cards: 1 adet 0 ve 2 adet 1-9 her renkten.
         for (CardColor color : CardColor.values()) {

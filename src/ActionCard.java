@@ -41,12 +41,14 @@ public class ActionCard extends Card {
         switch(actionType) {
             case DRAW_TWO:
                 mediator.moveToNextPlayer();
-                Player nextPlayer = mediator.getCurrentPlayer();
+                Player drawTwoNextPlayer = mediator.getCurrentPlayer();
+                Deck drawTwoDeck = mediator.getDeck();
                 for(int i = 0; i < 2; i++){
-                    Card drawn = mediator.getDeck().drawCard();
-                    nextPlayer.addCard(drawn);
-                    System.out.println(nextPlayer.getName() + " draws " + drawn);
+                    Card drawn = drawTwoDeck.drawCard();
+                    drawTwoNextPlayer.addCard(drawn);
+                    System.out.println(drawTwoNextPlayer.getName() + " draws " + drawn);
                 }
+                mediator.setDeck(drawTwoDeck);
                 mediator.moveToNextPlayer();
                 break;
             case REVERSE:
@@ -62,39 +64,41 @@ public class ActionCard extends Card {
                 mediator.moveToNextPlayer();
                 break;
             case WILD:
-                Player current = mediator.getCurrentPlayer();
-                CardColor chosenColor = current.chooseColor();
+                Player wildCurrentPlayer = mediator.getCurrentPlayer();
+                CardColor wildChosenColor = wildCurrentPlayer.chooseColor();
                 if(mediator instanceof DuoCardGame) {
-                    ((DuoCardGame)mediator).setCurrentColor(chosenColor);
+                    ((DuoCardGame)mediator).setCurrentColor(wildChosenColor);
                 }
-                System.out.println(current.getName() + " chooses color " + chosenColor);
-                color = chosenColor;
+                System.out.println(wildCurrentPlayer.getName() + " chooses color " + wildChosenColor);
+                color = wildChosenColor;
                 mediator.moveToNextPlayer();
                 break;
             case WILD_DRAW_FOUR:
-                Player curr = mediator.getCurrentPlayer();
-                CardColor newColor = curr.chooseColor();
+                Player wildFourCurrentPlayer = mediator.getCurrentPlayer();
+                CardColor wildFourChosenColor = wildFourCurrentPlayer.chooseColor();
                 if(mediator instanceof DuoCardGame) {
-                    ((DuoCardGame)mediator).setCurrentColor(newColor);
+                    ((DuoCardGame)mediator).setCurrentColor(wildFourChosenColor);
                 }
-                color = newColor;
+                color = wildFourChosenColor;
                 mediator.moveToNextPlayer();
-                Player affected = mediator.getCurrentPlayer();
+                Player wildFourNextPlayer = mediator.getCurrentPlayer();
+                Deck drawFourDeck = mediator.getDeck();
                 for(int i = 0; i < 4; i++){
-                    Card drawn = mediator.getDeck().drawCard();
-                    affected.addCard(drawn);
-                    System.out.println(affected.getName() + " draws " + drawn);
+                    Card drawn = drawFourDeck.drawCard();
+                    wildFourNextPlayer.addCard(drawn);
+                    System.out.println(wildFourNextPlayer.getName() + " draws " + drawn);
                 }
+                mediator.setDeck(drawFourDeck);
                 mediator.moveToNextPlayer();
                 break;
             case SHUFFLE_HANDS:
                 System.out.println("Shuffling hands among players.");
                 if(mediator instanceof DuoCardGame) {
                     ((DuoCardGame)mediator).shuffleHands();
-                    Player p = mediator.getCurrentPlayer();
-                    CardColor chosen = p.chooseColor();
+                    Player shuffleCurrentPlayer = mediator.getCurrentPlayer();
+                    CardColor chosen = shuffleCurrentPlayer.chooseColor();
                     ((DuoCardGame)mediator).setCurrentColor(chosen);
-                    System.out.println(p.getName() + " chooses color " + chosen);
+                    System.out.println(shuffleCurrentPlayer.getName() + " chooses color " + chosen);
                     color = chosen;
                 }
                 mediator.moveToNextPlayer();
@@ -107,5 +111,10 @@ public class ActionCard extends Card {
     @Override
     public String toString() {
         return color + " " + actionType;
+    }
+
+    @Override
+    public Card copy() {
+        return new ActionCard(color, actionType);
     }
 }

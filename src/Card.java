@@ -18,6 +18,8 @@ public abstract class Card {
     public abstract boolean isPlayable(Card topCard);
 
     public abstract void executeEffect(IGameMediator mediator);
+
+    public abstract Card copy();
     
     @Override
     public abstract String toString();

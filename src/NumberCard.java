@@ -31,4 +31,9 @@ public class NumberCard extends Card {
         }
         return this.getColor() == otherCard.getColor();
     }
+
+    @Override
+    public Card copy() {
+        return new NumberCard(color, number);
+    }
 }

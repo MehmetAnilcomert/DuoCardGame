@@ -21,6 +21,9 @@ public class Player {
         return new ArrayList<>(hand);
     }
     
+    public void clearHand() {
+        hand = new ArrayList<>();
+    }
     
     public int getScore() {
         return score;

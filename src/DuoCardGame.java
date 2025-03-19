@@ -124,7 +124,7 @@ public class DuoCardGame implements IGameMediator {
     private void resetRound() {
         deck = new Deck();
         for (Player p : players) {
-            p.getHand().clear();
+            p.clearHand();
         }
         startGame();
     }
@@ -142,15 +142,15 @@ public class DuoCardGame implements IGameMediator {
     }
     
     public void shuffleHands() {
-        List<Card> allCards = new ArrayList<>();
+        List<Card> shufflePile = new ArrayList<>();
         for (Player p : players) {
-            allCards.addAll(p.getHand());
-            p.getHand().clear();
+            shufflePile.addAll(p.getHand());
+            p.clearHand();
         }
-        Collections.shuffle(allCards);
+        Collections.shuffle(shufflePile);
         int index = 0;
-        while (!allCards.isEmpty()) {
-            players.get(index % players.size()).addCard(allCards.remove(0));
+        while (!shufflePile.isEmpty()) {
+            players.get(index % players.size()).addCard(shufflePile.remove(0));
             index++;
         }
     }
@@ -171,8 +171,14 @@ public class DuoCardGame implements IGameMediator {
     
     @Override
     public Deck getDeck() {
-        return deck;
+        return new Deck(deck); // Return a copy to avoid direct modification
     }
+
+    @Override
+    public void setDeck(Deck deck) {
+        this.deck = new Deck(deck); // Store a defensive copy
+    }
+
     
     @Override
     public Player selectDealer() {
