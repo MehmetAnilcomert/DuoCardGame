@@ -49,19 +49,16 @@ public class ActionCard extends Card {
                     System.out.println(drawTwoNextPlayer.getName() + " draws " + drawn);
                 }
                 mediator.setDeck(drawTwoDeck);
-                mediator.moveToNextPlayer();
                 break;
             case REVERSE:
                 if (mediator instanceof DuoCardGame) {
                     ((DuoCardGame)mediator).reverseDirection();
                     System.out.println("Game direction reversed.");
                 }
-                mediator.moveToNextPlayer();
                 break;
             case SKIP:
                 mediator.moveToNextPlayer();
                 System.out.println(mediator.getCurrentPlayer().getName() + " is skipped.");
-                mediator.moveToNextPlayer();
                 break;
             case WILD:
                 Player wildCurrentPlayer = mediator.getCurrentPlayer();
@@ -71,7 +68,6 @@ public class ActionCard extends Card {
                 }
                 System.out.println(wildCurrentPlayer.getName() + " chooses color " + wildChosenColor);
                 color = wildChosenColor;
-                mediator.moveToNextPlayer();
                 break;
             case WILD_DRAW_FOUR:
                 Player wildFourCurrentPlayer = mediator.getCurrentPlayer();
@@ -89,7 +85,6 @@ public class ActionCard extends Card {
                     System.out.println(wildFourNextPlayer.getName() + " draws " + drawn);
                 }
                 mediator.setDeck(drawFourDeck);
-                mediator.moveToNextPlayer();
                 break;
             case SHUFFLE_HANDS:
                 System.out.println("Shuffling hands among players.");
@@ -101,7 +96,6 @@ public class ActionCard extends Card {
                     System.out.println(shuffleCurrentPlayer.getName() + " chooses color " + chosen);
                     color = chosen;
                 }
-                mediator.moveToNextPlayer();
                 break;
             default:
                 break;

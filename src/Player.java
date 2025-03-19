@@ -1,6 +1,5 @@
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Player {
     private String name;

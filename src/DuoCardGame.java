@@ -5,11 +5,13 @@ public class DuoCardGame implements IGameMediator {
     private Deck deck;
     private int currentPlayerIndex;
     private int direction; // 1: left, -1: right
+    private int roundNumber;
     private boolean roundEnded;
     private boolean gameOver;
     private Player gameWinner;
     private CardColor currentColor;
-    
+    private CSVLogger logger;
+
     public DuoCardGame() {
         players = new ArrayList<>();
         deck = new Deck();
@@ -17,13 +19,17 @@ public class DuoCardGame implements IGameMediator {
         roundEnded = false;
         gameOver = false;
         currentColor = null;
+        logger = new CSVLogger();
+        roundNumber = 1;
     }
     
     public void startGame() {
-        int numPlayers = new Random().nextInt(3) + 2; // 2 to 4 players
-        System.out.println("Starting game with " + numPlayers + " players.");
-        for (int i = 1; i <= numPlayers; i++) {
-            players.add(new Player("Player" + i));
+        if (players.isEmpty()) { // Only initialize players when first starting the game
+            int numPlayers = new Random().nextInt(3) + 2; // 2 to 4 players
+            System.out.println("Starting game with " + numPlayers + " players.");
+            for (int i = 1; i <= numPlayers; i++) {
+                players.add(new Player("Player " + i));
+            }
         }
         
         // Dealer selection: each player draws a card; highest score becomes dealer.
@@ -92,8 +98,8 @@ public class DuoCardGame implements IGameMediator {
             }
         }
         
-        CSVLogger logger = new CSVLogger();
         logger.logGameStatus(this);
+        roundNumber += 1;
         
         for (Player p : players) {
             if (p.getScore() >= 500) {
@@ -166,8 +172,13 @@ public class DuoCardGame implements IGameMediator {
     
     @Override
     public void moveToNextPlayer() {
+        // Ensure the direction is either 1 (forward) or -1 (backward)
         currentPlayerIndex = (currentPlayerIndex + direction + players.size()) % players.size();
+        if (currentPlayerIndex < 0) {
+            currentPlayerIndex += players.size();
+        }
     }
+
     
     @Override
     public Deck getDeck() {
@@ -203,8 +214,10 @@ public class DuoCardGame implements IGameMediator {
     }
     
     public List<Player> getPlayers() {
-        return players;
-    }
+        return new ArrayList<>(players); // Shallow copy of the list
+    }    
 
-    
+    public int getRoundNumber() {
+        return roundNumber;
+    }
 }
