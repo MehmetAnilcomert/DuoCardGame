@@ -98,9 +98,6 @@ public class DuoCardGame implements IGameMediator {
             }
         }
         
-        logger.logGameStatus(this);
-        roundNumber += 1;
-        
         for (Player p : players) {
             if (p.getScore() >= 500) {
                 gameOver = true;
@@ -108,6 +105,9 @@ public class DuoCardGame implements IGameMediator {
                 break;
             }
         }
+
+        logger.logGameStatus(this);
+        roundNumber += 1;
         
         if (!gameOver) {
             resetRound();
