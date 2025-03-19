@@ -1,5 +1,6 @@
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Player {
     private String name;
@@ -17,8 +18,9 @@ public class Player {
     }
     
     public List<Card> getHand() {
-        return hand;
+        return new ArrayList<>(hand);
     }
+    
     
     public int getScore() {
         return score;
@@ -37,26 +39,47 @@ public class Player {
     }
     
     public Card choosePlayableCard(Card topCard) {
-        List<Card> playable = new ArrayList<>();
+        List<Card> sameColorCards = new ArrayList<>();
+        List<Card> diffColoredCards = new ArrayList<>();
+        List<Card> wildCards = new ArrayList<>();
+    
+        // Categorize cards in a single loop
         for (Card c : hand) {
-            if (c.isPlayable(topCard))
-                playable.add(c);
-        }
-        if (playable.isEmpty())
-            return null;
-        Card chosen = playable.get(0);
-        for (Card c : playable) {
-            if (c instanceof NumberCard && topCard instanceof NumberCard) {
-                if (c.getColor() == topCard.getColor() && c.getScore() > chosen.getScore()){
-                    chosen = c;
-                }
+            if (!c.isPlayable(topCard)) continue;
+    
+            if (c.getColor() == CardColor.WILD) {
+                wildCards.add(c);
+            } else if (c.getColor() == topCard.getColor()) {
+                sameColorCards.add(c);
             } else {
-                chosen = c;
-                break;
+                diffColoredCards.add(c);
             }
         }
-        return chosen;
+    
+        // Sort same-color cards by highest score
+        sameColorCards.sort(Comparator.comparing(Card::getScore).reversed());
+    
+        Random random = new Random();
+    
+        // Randomly choose whether to prioritize same-color or different-color cards
+        boolean prioritizeSameColor = random.nextBoolean();
+    
+        if (prioritizeSameColor && !sameColorCards.isEmpty()) {
+            return sameColorCards.get(0); // Highest scoring same-color card
+        }
+        if (!diffColoredCards.isEmpty()) {
+            return diffColoredCards.get(random.nextInt(diffColoredCards.size()));
+        }
+        if (!sameColorCards.isEmpty()) { // Fallback to same-color if needed
+            return sameColorCards.get(0);
+        }
+        if (!wildCards.isEmpty()) {
+            return wildCards.get(random.nextInt(wildCards.size())); // Random Wild card
+        }
+    
+        return null; // No playable card
     }
+    
     
     public CardColor chooseColor() {
         Map<CardColor, Integer> colorCount = new HashMap<>();
