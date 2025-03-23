@@ -114,16 +114,16 @@ public class DuoCardGame implements IGameMediator {
             }
         }
         
-        for (Player p : players) { // Check if any players have a score of 500 or higher and declare the winner
+        logger.logGameStatus(this);
+        roundNumber += 1;
+        
+        for (Player p : players) {
             if (p.getScore() >= 500) {
                 gameOver = true;
                 gameWinner = p;
                 break;
             }
         }
-
-        logger.logGameStatus(this); // Logger logs the status of each round
-        roundNumber += 1;
         
         if (!gameOver) {
             resetRound();

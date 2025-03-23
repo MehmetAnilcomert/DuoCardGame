@@ -48,8 +48,7 @@ public class CSVLogger {
             // Log the winner player
             if (game.isGameOver()) {
                 StringBuilder footer = new StringBuilder();
-                footer.append("Winner,").append(game.getWinner().getName());
-                pw.println(footer.toString());
+                footer.append("Winner,").append(game.getWinner().toString());
             }
             pw.close();
         } catch (IOException e) {
