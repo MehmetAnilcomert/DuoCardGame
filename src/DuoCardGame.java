@@ -39,18 +39,18 @@ public class DuoCardGame implements IGameMediator {
         deck.shuffle();
         deck.dealCards(players, 7);
         
-        for (Player p : players) {
+        for (Player p : players) { // Give each player 7 cards and output their hands
             System.out.println(p.getName() + " hand: " + p.getHand());
         }
         
         currentPlayerIndex = (players.indexOf(dealer) + 1) % players.size();
         
-        Card startingCard = deck.drawCard();
+        Card startingCard = deck.drawCard(); // Top card from Draw Pile starts and is put on the Discard Pile
         deck.putCardToDiscardPile(startingCard);
         currentColor = startingCard.getColor();
         System.out.println("Starting Discard Pile card: " + startingCard);
         
-        if (startingCard instanceof ActionCard) {
+        if (startingCard instanceof ActionCard) { // If top card is an action card, its effect is followed
             ((ActionCard) startingCard).executeEffect(this);
         }
     }
@@ -65,7 +65,7 @@ public class DuoCardGame implements IGameMediator {
             System.out.println(currentPlayer.getName() + "'s turn.");
             
             Card cardToPlay = currentPlayer.choosePlayableCard(topCard);
-            if (cardToPlay != null) {
+            if (cardToPlay != null) { // Player has a card that is playable
                 currentPlayer.playCard(cardToPlay);
                 deck.putCardToDiscardPile(cardToPlay);
                 currentColor = cardToPlay.getColor();
@@ -73,11 +73,11 @@ public class DuoCardGame implements IGameMediator {
                 if (cardToPlay instanceof ActionCard) {
                     ((ActionCard) cardToPlay).executeEffect(this);
                 }
-            } else {
+            } else { // Player has no card that is playable, draw from the Draw Pile
                 Card drawn = deck.drawCard();
                 currentPlayer.addCard(drawn);
                 System.out.println(currentPlayer.getName() + " draws " + drawn);
-                if (drawn.isPlayable(topCard)) {
+                if (drawn.isPlayable(topCard)) { // If the drawn card can be played then the player plays it
                     currentPlayer.playCard(drawn);
                     deck.putCardToDiscardPile(drawn);
                     currentColor = drawn.getColor();
@@ -88,7 +88,7 @@ public class DuoCardGame implements IGameMediator {
                 }
             }
             
-            if (currentPlayer.getHand().isEmpty()) {
+            if (currentPlayer.getHand().isEmpty()) { // Players has no cards in their hand and wins the round
                 System.out.println(currentPlayer.getName() + " wins the round!");
                 updateScores(currentPlayer);
                 roundEnded = true;
@@ -98,7 +98,7 @@ public class DuoCardGame implements IGameMediator {
             }
         }
         
-        for (Player p : players) {
+        for (Player p : players) { // Check if any players have a score of 500 or higher and declare the winner
             if (p.getScore() >= 500) {
                 gameOver = true;
                 gameWinner = p;
@@ -106,7 +106,7 @@ public class DuoCardGame implements IGameMediator {
             }
         }
 
-        logger.logGameStatus(this);
+        logger.logGameStatus(this); // Logger logs the status of each round
         roundNumber += 1;
         
         if (!gameOver) {
@@ -116,7 +116,7 @@ public class DuoCardGame implements IGameMediator {
     
     private void updateScores(Player roundWinner) {
         int roundScore = 0;
-        for (Player p : players) {
+        for (Player p : players) { // Add opponent players' remaining cards' scores to the winner player of a round
             if (p != roundWinner) {
                 for (Card c : p.getHand()) {
                     roundScore += c.getScore();
@@ -144,25 +144,25 @@ public class DuoCardGame implements IGameMediator {
     }
     
     public void reverseDirection() {
-        direction *= -1;
+        direction *= -1; // Reverses direction by inverting (1: left, -1: right)
     }
     
     public void shuffleHands() {
         List<Card> shufflePile = new ArrayList<>();
-        for (Player p : players) {
+        for (Player p : players) { // Get all cards from players' hands and shuffle them 
             shufflePile.addAll(p.getHand());
             p.clearHand();
         }
         Collections.shuffle(shufflePile);
         int index = 0;
-        while (!shufflePile.isEmpty()) {
+        while (!shufflePile.isEmpty()) { // Distribute cards to players until the shuffle pile is empty
             players.get(index % players.size()).addCard(shufflePile.remove(0));
             index++;
         }
     }
     
     public void setCurrentColor(CardColor color) {
-        currentColor = color;
+        currentColor = color; // Update the current color in the game, set after playing a Wild Card
     }
     
     @Override
@@ -172,9 +172,9 @@ public class DuoCardGame implements IGameMediator {
     
     @Override
     public void moveToNextPlayer() {
-        // Ensure the direction is either 1 (forward) or -1 (backward)
+        // Move to the next player based on the direction (1 for left, -1 for right), also ensures index wraps around correctly within the player list.
         currentPlayerIndex = (currentPlayerIndex + direction + players.size()) % players.size();
-        if (currentPlayerIndex < 0) {
+        if (currentPlayerIndex < 0) { 
             currentPlayerIndex += players.size();
         }
     }
@@ -193,9 +193,9 @@ public class DuoCardGame implements IGameMediator {
     
     @Override
     public Player selectDealer() {
-        Player selected = null;
+        Player selected = null;  // Each player draws one card, and the player with the highest-scoring card is selected as the dealer 
         int highest = -1;
-        for (Player p : players) {
+        for (Player p : players) { 
             Card drawn = deck.drawCard();
             System.out.println(p.getName() + " draws " + drawn + " for dealer selection.");
             if (drawn.getScore() > highest) {
@@ -204,7 +204,7 @@ public class DuoCardGame implements IGameMediator {
             }
             deck.addCardToDrawPile(drawn);
         }
-        deck.shuffle();
+        deck.shuffle(); // The drawn cards are returned to the draw pile and shuffled afterward
         return selected;
     }
     
@@ -214,7 +214,7 @@ public class DuoCardGame implements IGameMediator {
     }
     
     public List<Player> getPlayers() {
-        return new ArrayList<>(players); // Shallow copy of the list
+        return new ArrayList<>(players); // Returns a new list containing the same Player instances (shallow copy of players)
     }    
 
     public int getRoundNumber() {

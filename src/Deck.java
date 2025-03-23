@@ -18,7 +18,7 @@ public class Deck {
     }
 
     public void initializeDeck() {
-        // Number Cards: 1 adet 0 ve 2 adet 1-9 her renkten.
+        // Number Cards: Each color has one '0' card and two of each number from 1 to 9
         for (CardColor color : CardColor.values()) {
             if (color != CardColor.WILD) {
                 drawPile.add(new NumberCard(color, 0));
@@ -28,7 +28,7 @@ public class Deck {
                 }
             }
         }
-        // Action Cards: DRAW_TWO, REVERSE, SKIP (her renkten 2 adet)
+        // Action Cards: DRAW_TWO, REVERSE and SKIP (2 for each color)
         for (CardColor color : CardColor.values()) {
             if (color != CardColor.WILD) {
                 drawPile.add(new ActionCard(color, ActionType.DRAW_TWO));
@@ -39,12 +39,12 @@ public class Deck {
                 drawPile.add(new ActionCard(color, ActionType.SKIP));
             }   
         }
-        // Wild ve Wild Draw Four: Her biri 4 adet
+        // Wild Cards: WILD and WILD_DRAW_FOUR (4 each)
         for (int i = 0; i < 4; i++) {
             drawPile.add(new ActionCard(CardColor.WILD, ActionType.WILD));
             drawPile.add(new ActionCard(CardColor.WILD, ActionType.WILD_DRAW_FOUR));
         }
-        // Shuffle Hands: 1 adet
+        // Shuffle Hands (1 card)
         drawPile.add(new ActionCard(CardColor.WILD, ActionType.SHUFFLE_HANDS));
     }
     
