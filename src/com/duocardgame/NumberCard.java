@@ -64,12 +64,12 @@ public class NumberCard extends Card {
      * @return {@code true} if this card is playable on the other card, {@code false} otherwise
      */
     @Override
-    public boolean isPlayable(Card otherCard) {
-        if (otherCard instanceof NumberCard) {
-            NumberCard other = (NumberCard) otherCard;
+    public boolean isPlayable(Card topCard) {
+        if (topCard instanceof NumberCard) {
+            NumberCard other = (NumberCard) topCard;
             return this.getColor() == other.getColor() || this.number == other.number;
         }
-        return this.getColor() == otherCard.getColor();
+        return this.getColor() == topCard.getColor();
     }
 
     /**
