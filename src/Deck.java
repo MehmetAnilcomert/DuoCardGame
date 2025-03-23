@@ -8,11 +8,11 @@ public class Deck {
     public Deck() {
         drawPile = new ArrayList<>();
         discardPile = new ArrayList<>();
-        initializeDeck();
+        initializeDeck(); // Initialize and shuffle deck when constructed
         shuffle();
     }
 
-    public Deck(Deck deck) {
+    public Deck(Deck deck) { // Copy constructor used in getDeck implementation by DuoCardGame, uses the copy() method of Card in both piles
         this.drawPile = deck.drawPile.stream().map(c -> c.copy()).collect(Collectors.toList());
         this.discardPile = deck.discardPile.stream().map(c -> c.copy()).collect(Collectors.toList());
     }
@@ -53,7 +53,7 @@ public class Deck {
     }
     
     public void dealCards(List<Player> players, int count) {
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < count; i++) { // Deal cards to each player in players parameter
             for (Player p : players) {
                 if (drawPile.isEmpty()) reshuffle();
                 p.addCard(drawCard());
@@ -69,7 +69,7 @@ public class Deck {
     }
     
     public Card getTopDiscardPileCard() {
-        if (discardPile.isEmpty()) return null;
+        if (discardPile.isEmpty()) return null; // Gets top card in Discard Pile if there are any cards in it
         return discardPile.get(discardPile.size() - 1);
     }
     
@@ -78,7 +78,7 @@ public class Deck {
     }
     
     public void reshuffle() {
-        if (discardPile.size() > 1) {
+        if (discardPile.size() > 1) { // Reshuffles all cards when the draw pile has no cards, except for the card on top of discard pile
             Card top = discardPile.remove(discardPile.size() - 1);
             drawPile.addAll(discardPile);
             discardPile.clear();

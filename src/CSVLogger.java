@@ -6,7 +6,7 @@ public class CSVLogger {
     public void logGameStatus(DuoCardGame game) {
         try {
             File file = new File("Files/game_status.csv");
-            file.getParentFile().mkdirs();
+            file.getParentFile().mkdirs(); // Create Files directory if it doesn't exist
             
             // Check if it's the first log, if so overwrite; otherwise, append
             FileWriter fw = new FileWriter(file, !isFirstLog); // Use false for overwrite, true for append
@@ -30,6 +30,7 @@ public class CSVLogger {
                 sb.append(",").append(p.getScore());
             }
             pw.println(sb.toString());
+            // Log the winner player
             if (game.isGameOver()) {
                 StringBuilder footer = new StringBuilder();
                 footer.append("Winner,").append(game.getWinner().getName());

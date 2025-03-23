@@ -17,11 +17,11 @@ public class Player {
     }
     
     public List<Card> getHand() {
-        return new ArrayList<>(hand);
+        return new ArrayList<>(hand); // Get shallow copy of the hand list (new list, but same Card instances)
     }
     
     public void clearHand() {
-        hand = new ArrayList<>();
+        hand = new ArrayList<>(); // Clear the hand list, used in shuffling for Shuffle Hands card
     }
     
     public int getScore() {
@@ -70,9 +70,9 @@ public class Player {
             return sameColorCards.get(0); // Highest scoring same-color card
         }
         if (!diffColoredCards.isEmpty()) {
-            return diffColoredCards.get(random.nextInt(diffColoredCards.size()));
+            return diffColoredCards.get(random.nextInt(diffColoredCards.size())); // Random different-color card
         }
-        if (!sameColorCards.isEmpty()) { // Fallback to same-color if needed
+        if (!sameColorCards.isEmpty()) { // Fallback to same-color if no playable different-color cards and prioritized 
             return sameColorCards.get(0);
         }
         if (!wildCards.isEmpty()) {
