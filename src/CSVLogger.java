@@ -1,8 +1,22 @@
 import java.io.*;
 
+/**
+ * A logger for logging the status of the Duo card game to a CSV file.
+ * It logs the game's round number, players' scores, and the winner player.
+ * The CSV file is created in the "Files" directory and is appended with each log.
+ */
 public class CSVLogger {
     private boolean isFirstLog = true;  // Track whether it's the first time logging
 
+    /**
+     * Logs the current Duo card game status to a CSV file.
+     * The status includes the round number, players' names, and their scores.
+     * If the game is over, the winner's name is logged as well.
+     * The "game_status.csv" file is created in the "Files" directory, and each log entry is appended.
+     *
+     * @param game the current Duo card game instance to log.
+     * @throws IOException if an I/O exception occurs if the file could not be written properly
+     */
     public void logGameStatus(DuoCardGame game) {
         try {
             File file = new File("Files/game_status.csv");
@@ -30,6 +44,7 @@ public class CSVLogger {
                 sb.append(",").append(p.getScore());
             }
             pw.println(sb.toString());
+            
             // Log the winner player
             if (game.isGameOver()) {
                 StringBuilder footer = new StringBuilder();
@@ -39,6 +54,6 @@ public class CSVLogger {
             pw.close();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        } 
     }
 }
