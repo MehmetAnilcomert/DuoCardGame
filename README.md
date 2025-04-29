@@ -60,3 +60,13 @@ A multiplayer card game where 2-4 players compete to discard all cards first. Th
    ```bash
    git clone https://github.com/your-username/G04_CENG431_HW1.git
 2. **Run DuoCardGameMain file**
+
+## 👥 Contributors
+
+- [Mehmet Anıl Cömert](https://github.com/MehmetAnilcomert)
+- [Atahan Serhat İşbakan](https://github.com/ModestSerhat)
+- [Tural Karimli](https://github.com/TuralK)
+
+---
+
+*This project was developed for CENG431 - Building Software Systems course.*
